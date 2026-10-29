@@ -71,6 +71,7 @@ export async function loadUssdData(): Promise<UssdData> {
   }
 
   const categories = (catsRes.data as CategoryRow[]).map((c) => ({
+    id: c.id,
     slug: c.slug,
     nameEn: c.name_en,
     nameSw: c.name_sw,
@@ -79,7 +80,7 @@ export async function loadUssdData(): Promise<UssdData> {
 
   const content = (contentRes.data as ContentRow[]).map((c) => ({
     id: c.id,
-    categorySlug: categories.find((cat) => cat.slug && cat.slug)! && (categories.find((k) => k.slug === c.category_id)?.slug ?? ""),
+    categorySlug: categories.find((cat) => cat.id === c.category_id)?.slug ?? "",
     titleEn: c.title_en,
     titleSw: c.title_sw,
     bodyEn: c.body_en,
