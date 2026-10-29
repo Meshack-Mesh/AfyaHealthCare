@@ -37,9 +37,11 @@ function AuthPage() {
     setBusy(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp(email, password as never as Record<string, never>, {
-          emailRedirectTo: window.location.origin,
-        } as never).then((r) => r) as never as { error: { message: string } | null };
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: window.location.origin },
+        });
         if (error) throw error;
         setConfirmationSent(true);
       } else {
