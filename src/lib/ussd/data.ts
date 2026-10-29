@@ -27,6 +27,7 @@ function makePublicClient() {
 }
 
 interface CategoryRow {
+  id: string;
   slug: string;
   name_en: string;
   name_sw: string;
@@ -57,7 +58,7 @@ export async function loadUssdData(): Promise<UssdData> {
   const supabase = makePublicClient();
 
   const [catsRes, contentRes, providersRes] = await Promise.all([
-    supabase.from("health_categories").select("slug, name_en, name_sw, sort_order"),
+    supabase.from("health_categories").select("id, slug, name_en, name_sw, sort_order"),
     supabase
       .from("health_content")
       .select("id, title_en, title_sw, body_en, body_sw, status, sort_order, category_id")
@@ -70,6 +71,7 @@ export async function loadUssdData(): Promise<UssdData> {
   }
 
   const categories = (catsRes.data as CategoryRow[]).map((c) => ({
+    id: c.id,
     slug: c.slug,
     nameEn: c.name_en,
     nameSw: c.name_sw,
@@ -78,7 +80,7 @@ export async function loadUssdData(): Promise<UssdData> {
 
   const content = (contentRes.data as ContentRow[]).map((c) => ({
     id: c.id,
-    categorySlug: categories.find((cat) => cat.slug && cat.slug)! && (categories.find((k) => k.slug === c.category_id)?.slug ?? ""),
+    categorySlug: categories.find((cat) => cat.id === c.category_id)?.slug ?? "",
     titleEn: c.title_en,
     titleSw: c.title_sw,
     bodyEn: c.body_en,
