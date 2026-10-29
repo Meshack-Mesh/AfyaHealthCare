@@ -27,6 +27,7 @@ function makePublicClient() {
 }
 
 interface CategoryRow {
+  id: string;
   slug: string;
   name_en: string;
   name_sw: string;
@@ -57,7 +58,7 @@ export async function loadUssdData(): Promise<UssdData> {
   const supabase = makePublicClient();
 
   const [catsRes, contentRes, providersRes] = await Promise.all([
-    supabase.from("health_categories").select("slug, name_en, name_sw, sort_order"),
+    supabase.from("health_categories").select("id, slug, name_en, name_sw, sort_order"),
     supabase
       .from("health_content")
       .select("id, title_en, title_sw, body_en, body_sw, status, sort_order, category_id")
