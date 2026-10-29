@@ -10,33 +10,44 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicUssdCallbackKeyRouteImport } from './routes/api/public/ussd.$callbackKey'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicUssdCallbackKeyRoute =
+  ApiPublicUssdCallbackKeyRouteImport.update({
+    id: '/api/public/ussd/$callbackKey',
+    path: '/api/public/ussd/$callbackKey',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/ussd/$callbackKey': typeof ApiPublicUssdCallbackKeyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/ussd/$callbackKey': typeof ApiPublicUssdCallbackKeyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/ussd/$callbackKey': typeof ApiPublicUssdCallbackKeyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/api/public/ussd/$callbackKey'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/public/ussd/$callbackKey'
+  id: '__root__' | '/' | '/api/public/ussd/$callbackKey'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicUssdCallbackKeyRoute: typeof ApiPublicUssdCallbackKeyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +59,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/ussd/$callbackKey': {
+      id: '/api/public/ussd/$callbackKey'
+      path: '/api/public/ussd/$callbackKey'
+      fullPath: '/api/public/ussd/$callbackKey'
+      preLoaderRoute: typeof ApiPublicUssdCallbackKeyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicUssdCallbackKeyRoute: ApiPublicUssdCallbackKeyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -3,8 +3,10 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { getRequest } from "@tanstack/react-start";
 
-async function assertAdmin(supabase: NonNullable<unknown>, userId: string) {
-  const { data } = await (supabase as any).rpc("has_role", {
+import type { SupabaseClient } from "@supabase/supabase-js";
+
+async function assertAdmin(supabase: SupabaseClient, userId: string) {
+  const { data } = await supabase.rpc("has_role", {
     _user_id: userId,
     _role: "admin",
   });
