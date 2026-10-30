@@ -17,12 +17,6 @@ import {
   adminSaveProvider,
   adminDeleteProvider,
 } from "@/server/admin.functions";
-import type {
-  adminSaveContent as AdminSaveContent,
-  adminDeleteContent as AdminDeleteContent,
-  adminSaveProvider as AdminSaveProvider,
-  adminDeleteProvider as AdminDeleteProvider,
-} from "@/server/admin.functions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -160,6 +154,7 @@ function DashboardPage() {
 
   const stats = data.stats!;
   const gateway = data.gateway!;
+  const callbackUrl = window.location.origin + gateway.callbackPath;
 
   return (
     <div className="min-h-screen bg-background">
@@ -215,13 +210,13 @@ function DashboardPage() {
               <CardContent>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 overflow-x-auto rounded-md bg-secondary px-3 py-2 text-sm text-secondary-foreground">
-                    {gateway.callbackUrl}
+                    {callbackUrl}
                   </code>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      navigator.clipboard.writeText(gateway.callbackUrl);
+                      navigator.clipboard.writeText(callbackUrl);
                       toast.success("Callback URL copied");
                     }}
                   >
@@ -363,7 +358,7 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
 }
 
 const emptyContent = {
-  id: undefined,
+  id: undefined as string | undefined,
   categoryId: "",
   titleEn: "",
   titleSw: "",
@@ -382,8 +377,8 @@ function ContentManager({
 }) {
   const [editing, setEditing] = useState<typeof emptyContent | null>(null);
   const [busy, setBusy] = useState(false);
-  const saveFn = useServerFn(AdminSaveContent as typeof adminSaveContent);
-  const deleteFn = useServerFn(AdminDeleteContent as typeof adminDeleteContent);
+  const saveFn = useServerFn(adminSaveContent);
+  const deleteFn = useServerFn(adminDeleteContent);
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -592,7 +587,7 @@ function ContentManager({
 }
 
 const emptyProvider = {
-  id: undefined,
+  id: undefined as string | undefined,
   name: "",
   county: "",
   location: "",
@@ -610,8 +605,8 @@ function ProviderManager({
 }) {
   const [editing, setEditing] = useState<typeof emptyProvider | null>(null);
   const [busy, setBusy] = useState(false);
-  const saveFn = useServerFn(AdminSaveProvider as typeof adminSaveProvider);
-  const deleteFn = useServerFn(AdminDeleteProvider as typeof adminDeleteProvider);
+  const saveFn = useServerFn(adminSaveProvider);
+  const deleteFn = useServerFn(adminDeleteProvider);
 
   async function save(e: React.FormEvent) {
     e.preventDefault();

@@ -270,10 +270,8 @@ export const adminGetGatewayInfo = createServerFn({ method: "GET" })
     await assertAdmin(context.supabase, context.userId);
     const key = process.env["USSD_CALLBACK_KEY"];
     if (!key) throw new Error("USSD_CALLBACK_KEY not configured");
-    const request = getRequest();
-    const url = new URL(request.url);
     return {
-      callbackUrl: `${url.origin}/api/public/ussd/${key}`,
+      callbackPath: `/api/public/ussd/${key}`,
       provider: "Africa's Talking",
     };
   });
