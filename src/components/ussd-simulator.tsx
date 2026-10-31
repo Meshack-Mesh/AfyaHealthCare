@@ -1,5 +1,5 @@
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { simulateUssd } from "@/server/ussd.functions";
 import { Button } from "@/components/ui/button";
 import { Loader2, RotateCcw } from "lucide-react";
@@ -18,6 +18,11 @@ export function UssdSimulator() {
     text: "",
   });
   const [busy, setBusy] = useState(true);
+
+  useEffect(() => {
+    void run([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function run(newPath: string[]) {
     setBusy(true);
