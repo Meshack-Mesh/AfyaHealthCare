@@ -16,7 +16,7 @@ import {
   adminDeleteContent,
   adminSaveProvider,
   adminDeleteProvider,
-} from "@/server/admin.functions";
+} from "@/lib/admin.functions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";

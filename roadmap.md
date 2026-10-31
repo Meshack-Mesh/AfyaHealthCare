@@ -16,3 +16,9 @@
 - [ ] Engine unit tests `src/test/ussd-engine.test.ts` (bilingual, back nav, invalid input, reminder action, draft exclusion)
 - [ ] End-to-end verification: sign up first admin, dashboard CRUD, simulator flows, callback route via curl
 - [ ] `AGENTS.md` — record technical decisions (stateless USSD path engine, callback key secret, bootstrap admin rule)
+- [ ] Simulator: accept dialing the service code (*335#) — user dialled *335# in the demo on 2026-10-31; show it as the dialed code and map it to the language screen
+
+## Done (2026-10-31)
+- [x] Landing page + interactive USSD simulator with dial flow (*335#), design system, root head/fonts/Toaster/auth listener
+- [x] Server functions moved from src/server/ to src/lib/*.functions.ts (import protection blocked src/server/ in client bundles)
+- [x] Simulator verified in browser: dial, English + Kiswahili menus, facility finder — no console errors
