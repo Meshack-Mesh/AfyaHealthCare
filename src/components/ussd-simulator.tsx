@@ -1,6 +1,6 @@
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
-import { simulateUssd } from "@/server/ussd.functions";
+import { simulateUssd } from "@/lib/ussd.functions";
 import { Button } from "@/components/ui/button";
 import { Loader2, RotateCcw } from "lucide-react";
 
