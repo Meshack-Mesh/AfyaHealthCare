@@ -10,14 +10,17 @@ import { Loader2, RotateCcw } from "lucide-react";
  * screen through the same engine the live callback uses. Read-only: the demo
  * never writes sessions, users or reminders.
  */
+export const USSD_SERVICE_CODE = "*335#";
+
 export function UssdSimulator() {
   const simulate = useServerFn(simulateUssd);
   const [path, setPath] = useState<string[]>([]);
+  const [dialed, setDialed] = useState(false);
   const [screen, setScreen] = useState<{ kind: string; text: string }>({
     kind: "CON",
     text: "",
   });
-  const [busy, setBusy] = useState(true);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     void run([]);
@@ -42,8 +45,15 @@ export function UssdSimulator() {
     await run([...path, key]);
   }
 
-  async function reset() {
+  async function dial() {
+    setDialed(true);
     await run([]);
+  }
+
+  function reset() {
+    setDialed(false);
+    setPath([]);
+    setScreen({ kind: "CON", text: "" });
   }
 
   return (
