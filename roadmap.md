@@ -16,3 +16,4 @@
 - [ ] Engine unit tests `src/test/ussd-engine.test.ts` (bilingual, back nav, invalid input, reminder action, draft exclusion)
 - [ ] End-to-end verification: sign up first admin, dashboard CRUD, simulator flows, callback route via curl
 - [ ] `AGENTS.md` — record technical decisions (stateless USSD path engine, callback key secret, bootstrap admin rule)
+- [ ] Simulator: accept dialing the service code (*335#) — user dialled *335# in the demo on 2026-10-31; show it as the dialed code and map it to the language screen
