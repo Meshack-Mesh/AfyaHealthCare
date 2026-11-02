@@ -16,6 +16,7 @@ import {
   adminDeleteContent,
   adminSaveProvider,
   adminDeleteProvider,
+  adminGenerateContent,
 } from "@/lib/admin.functions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +34,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -64,6 +66,7 @@ import {
   Users,
   LogOut,
   ShieldAlert,
+  Sparkles,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -368,6 +371,168 @@ const emptyContent = {
   sortOrder: 10,
 };
 
+type GeneratedDraft = {
+  titleEn: string;
+  titleSw: string;
+  bodyEn: string;
+  bodySw: string;
+};
+
+function AiContentGenerator({
+  categories,
+  onSaved,
+}: {
+  categories: Awaited<ReturnType<typeof adminListContent>>["categories"];
+  onSaved: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [categoryId, setCategoryId] = useState("");
+  const [source, setSource] = useState("");
+  const [draft, setDraft] = useState<GeneratedDraft | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const generateFn = useServerFn(adminGenerateContent);
+  const saveFn = useServerFn(adminSaveContent);
+
+  async function generate() {
+    if (!categoryId || source.trim().length < 3) {
+      toast.error("Choose a topic and describe it in a few words first");
+      return;
+    }
+    setGenerating(true);
+    setDraft(null);
+    try {
+      const result = await generateFn({ data: { categoryId, source } });
+      setDraft(result);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Generation failed");
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  async function saveDraft(e: React.FormEvent) {
+    e.preventDefault();
+    if (!draft) return;
+    setSaving(true);
+    try {
+      await saveFn({
+        data: { ...draft, categoryId, status: "draft", sortOrder: 10 },
+      });
+      toast.success("Draft saved — review it before publishing");
+      setOpen(false);
+      setDraft(null);
+      setSource("");
+      onSaved();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) setDraft(null); }}>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline" onClick={() => { setCategoryId(categories[0]?.id ?? ""); }}>
+          <Sparkles className="mr-2 h-4 w-4" /> Generate with AI
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Draft content with AI</DialogTitle>
+          <DialogDescription>
+            Describe a health topic or paste source text. AfyaCare drafts
+            English and Kiswahili copy; you review and save it as a draft.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={saveDraft} className="space-y-4">
+          <div className="space-y-2">
+            <Label>Topic</Label>
+            <Select value={categoryId} onValueChange={setCategoryId}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose a topic" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name_en}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label>Topic description or source text</Label>
+            <Textarea
+              rows={4}
+              value={source}
+              onChange={(e) => setSource(e.target.value)}
+              placeholder="e.g. Malaria prevention for pregnant women — bed nets, clinic visits, fever warning signs"
+            />
+          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            className="w-full"
+            onClick={generate}
+            disabled={generating || saving}
+          >
+            {generating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {generating ? "Drafting…" : "Generate draft"}
+          </Button>
+          {generating && (
+            <p className="text-sm text-muted-foreground">
+              This usually takes under a minute.
+            </p>
+          )}
+          {draft && (
+            <div className="space-y-3 rounded-lg border border-border p-3">
+              <p className="text-sm font-semibold">Suggested draft (editable)</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="space-y-1">
+                  <Label>Title (English)</Label>
+                  <Input
+                    value={draft.titleEn}
+                    onChange={(e) => setDraft({ ...draft, titleEn: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label>Kichwa (Kiswahili)</Label>
+                  <Input
+                    value={draft.titleSw}
+                    onChange={(e) => setDraft({ ...draft, titleSw: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <Label>Body (English)</Label>
+                <Textarea
+                  rows={4}
+                  value={draft.bodyEn}
+                  onChange={(e) => setDraft({ ...draft, bodyEn: e.target.value })}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Maudhui (Kiswahili)</Label>
+                <Textarea
+                  rows={4}
+                  value={draft.bodySw}
+                  onChange={(e) => setDraft({ ...draft, bodySw: e.target.value })}
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={saving}>
+                {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save as draft
+              </Button>
+            </div>
+          )}
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function ContentManager({
   content,
   router,
@@ -419,14 +584,20 @@ function ContentManager({
             users.
           </CardDescription>
         </div>
-        <Button
-          size="sm"
-          onClick={() =>
-            setEditing({ ...emptyContent, categoryId: content.categories[0]?.id ?? "" })
-          }
-        >
-          <Plus className="mr-2 h-4 w-4" /> New
-        </Button>
+        <div className="flex shrink-0 items-center gap-2">
+          <AiContentGenerator
+            categories={content.categories}
+            onSaved={() => router.invalidate()}
+          />
+          <Button
+            size="sm"
+            onClick={() =>
+              setEditing({ ...emptyContent, categoryId: content.categories[0]?.id ?? "" })
+            }
+          >
+            <Plus className="mr-2 h-4 w-4" /> New
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         {content.categories.map((cat) => {

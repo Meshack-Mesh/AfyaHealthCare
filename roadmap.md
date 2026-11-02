@@ -9,14 +9,8 @@
 - `/auth` staff sign-in/sign-up; first account claims admin
 
 ## Open
-- [ ] Fix any remaining typecheck errors (build OK at 2026-10-30T09:12:21Z — re-verify after next edits)
-- [ ] Landing page (`src/routes/index.tsx`) — hero, how-it-works, interactive USSD simulator (uses `simulateUssd` server fn, already written)
-- [ ] Design system in `src/styles.css` (green/cream health palette, Sora + Manrope fonts via link in `__root.tsx`)
-- [ ] `src/routes/__root.tsx` — real title/description, mount sonner `<Toaster />`, `onAuthStateChange` subscriber
-- [ ] Engine unit tests `src/test/ussd-engine.test.ts` (bilingual, back nav, invalid input, reminder action, draft exclusion)
-- [ ] End-to-end verification: sign up first admin, dashboard CRUD, simulator flows, callback route via curl
-- [ ] `AGENTS.md` — record technical decisions (stateless USSD path engine, callback key secret, bootstrap admin rule)
-- [ ] Simulator: accept dialing the service code (*335#) — user dialled *335# in the demo on 2026-10-31; show it as the dialed code and map it to the language screen
+- [ ] Replace remaining sample facility phone numbers with verified contacts (user will send more; Nasira Ac Facility added in Busia 2026-11-02 with 0768 236 831)
+- [ ] User asked for a `ussdcallback` Supabase Edge Function — blocked: new Edge Functions are not allowed on this stack; instead confirm the existing `/api/public/ussd/<key>` route covers the requested spec (five topics, CON/END, validation, secrets) and provide the public URL
 
 ## Done (2026-10-31)
 - [x] Landing page + interactive USSD simulator with dial flow (*335#), design system, root head/fonts/Toaster/auth listener
