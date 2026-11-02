@@ -583,14 +583,20 @@ function ContentManager({
             users.
           </CardDescription>
         </div>
-        <Button
-          size="sm"
-          onClick={() =>
-            setEditing({ ...emptyContent, categoryId: content.categories[0]?.id ?? "" })
-          }
-        >
-          <Plus className="mr-2 h-4 w-4" /> New
-        </Button>
+        <div className="flex shrink-0 items-center gap-2">
+          <AiContentGenerator
+            categories={content.categories}
+            onSaved={() => router.invalidate()}
+          />
+          <Button
+            size="sm"
+            onClick={() =>
+              setEditing({ ...emptyContent, categoryId: content.categories[0]?.id ?? "" })
+            }
+          >
+            <Plus className="mr-2 h-4 w-4" /> New
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
         {content.categories.map((cat) => {
