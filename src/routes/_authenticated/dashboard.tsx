@@ -16,6 +16,7 @@ import {
   adminDeleteContent,
   adminSaveProvider,
   adminDeleteProvider,
+  adminGenerateContent,
 } from "@/lib/admin.functions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -64,6 +65,7 @@ import {
   Users,
   LogOut,
   ShieldAlert,
+  Sparkles,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
