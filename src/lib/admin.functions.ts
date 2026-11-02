@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -284,9 +283,11 @@ export const adminGenerateContent = createServerFn({ method: "POST" })
       .eq("id", data.categoryId)
       .single();
     if (cat.error) throw new Error("Topic not found");
-    const request = getRequest();
-    const { generateUssdContent } = await import("@/lib/ai/generate.server");
-    return generateUssdContent(request, {
+    const [{ getRequest }, { generateUssdContent }] = await Promise.all([
+      import("@tanstack/react-start/server"),
+      import("@/lib/ai/generate.server"),
+    ]);
+    return generateUssdContent(getRequest(), {
       source: data.source,
       categoryName: (cat.data as { name_en: string }).name_en,
     });
