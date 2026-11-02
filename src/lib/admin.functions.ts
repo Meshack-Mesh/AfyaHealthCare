@@ -261,6 +261,36 @@ export const adminIsAdmin = createServerFn({ method: "GET" })
     return { isAdmin: !!data };
   });
 
+const generateSchema = z.object({
+  categoryId: z.string().uuid(),
+  source: z.string().min(3).max(6000),
+});
+
+/**
+ * Drafts bilingual USSD content with Lovable AI from a topic or pasted
+ * source text. Returns a suggestion only — nothing is saved until staff
+ * calls adminSaveContent.
+ */
+export const adminGenerateContent = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => generateSchema.parse(input))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const admin = await getAdminClient();
+    const cat = await admin
+      .from("health_categories")
+      .select("name_en")
+      .eq("id", data.categoryId)
+      .single();
+    if (cat.error) throw new Error("Topic not found");
+    const request = getRequest();
+    const { generateUssdContent } = await import("@/lib/ai/generate.server");
+    return generateUssdContent(request, {
+      source: data.source,
+      categoryName: (cat.data as { name_en: string }).name_en,
+    });
+  });
+
 /** Full gateway callback URL for the signed-in admin's configuration. */
 export const adminGetGatewayInfo = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
