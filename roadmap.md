@@ -9,8 +9,14 @@
 - `/auth` staff sign-in/sign-up; first account claims admin
 
 ## Open
-- [ ] Replace remaining sample facility phone numbers with verified contacts (user will send more; Nasira Ac Facility added in Busia 2026-11-02 with 0768 236 831)
-- [ ] User asked for a `ussdcallback` Supabase Edge Function — blocked: new Edge Functions are not allowed on this stack; instead confirm the existing `/api/public/ussd/<key>` route covers the requested spec (five topics, CON/END, validation, secrets) and provide the public URL
+- [ ] Replace remaining sample facility phone numbers with verified contacts — user will send them (Nasira Ac Facility, Busia, added 2026-11-02 with +254 768 236 831)
+- [x] User's `ussdcallback` Edge Function request resolved: new Edge Functions are not possible on this stack; the existing `/api/public/ussd/<key>` route already implements the full requested spec (sessionId/serviceCode/phoneNumber/text, CON/END, five topics, invalid-input handling, no Supabase login needed, key stored in Lovable Cloud secrets). Public URL host: `https://project--18d6b6da-9509-4c38-9c05-f437f73b6d80.lovable.app`; the key suffix is on the staff dashboard
+- [x] AI content generator shipped and verified end-to-end in the dashboard (2026-11-02): topic/source → bilingual EN/SW draft → save as draft
+
+## Done (2026-11-02)
+- [x] AI content generator: `adminGenerateContent` + `src/lib/ai/generate.server.ts` + dashboard "Generate with AI" dialog; gateway call verified live and full UI flow verified signed-in (draft saved, no console errors)
+- [x] Nasira Ac Facility added to the facility finder (Busia, +254 768 236 831)
+- [x] Test sign-up/verification data cleaned up (draft deleted, test admin role removed so the first real account claims admin)
 
 ## Done (2026-10-31)
 - [x] Landing page + interactive USSD simulator with dial flow (*335#), design system, root head/fonts/Toaster/auth listener
