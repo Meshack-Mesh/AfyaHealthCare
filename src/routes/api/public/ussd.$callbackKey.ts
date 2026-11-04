@@ -95,20 +95,38 @@ export const Route = createFileRoute("/api/public/ussd/$callbackKey")({
 
         const contentType = request.headers.get("content-type") ?? "";
         let raw: Record<string, string>;
-        if (contentType.includes("application/json")) {
-          raw = (await request.json()) as Record<string, string>;
-        } else {
-          const form = await request.formData();
-          raw = Object.fromEntries(
-            [...form.entries()].map(([k, v]) => [k, String(v)]),
-          );
+        try {
+          if (contentType.includes("application/json")) {
+            raw = (await request.json()) as Record<string, string>;
+          } else {
+            const form = await request.formData();
+            raw = Object.fromEntries(
+              [...form.entries()].map(([k, v]) => [k, String(v)]),
+            );
+          }
+        } catch {
+          console.error("USSD callback rejected: unreadable request body");
+          return new Response("END Invalid session payload", { status: 200 });
         }
 
         const parsed = payloadSchema.safeParse(raw);
         if (!parsed.success) {
+          // Log a masked phone number only — never the full number or secret.
+          const masked =
+            raw.phoneNumber && raw.phoneNumber.length > 6
+              ? `${raw.phoneNumber.slice(0, 6)}***${raw.phoneNumber.slice(-3)}`
+              : "***";
+          console.error(
+            `USSD callback rejected: invalid payload (phone ${masked})`,
+          );
           return new Response("END Invalid session payload", { status: 200 });
         }
         const { sessionId, phoneNumber, text } = parsed.data;
+        // Safe request log: short session id + masked phone, no secret.
+        const maskedPhone = `${phoneNumber.slice(0, 6)}***${phoneNumber.slice(-3)}`;
+        console.log(
+          `USSD callback: session ${sessionId.slice(0, 8)}*** phone ${maskedPhone} steps ${text.split("*").filter(Boolean).length}`,
+        );
         const segments = text.split("*").filter((s) => s !== "");
 
         let screen;
