@@ -9,6 +9,8 @@
 - `/auth` staff sign-in/sign-up; first account claims admin
 
 ## Open
+- [ ] Email sending: no sender domain configured yet — setup dialog shown 2026-11-03; once the user completes it, scaffold the six auth email templates (sign-up confirmation included)
+- [ ] Africa's Talking connection: user to create the sandbox account and paste the callback URL (shown on the staff dashboard) into the USSD channel
 - [ ] Replace remaining sample facility phone numbers with verified contacts — user will send them (Nasira Ac Facility, Busia, added 2026-11-02 with +254 768 236 831)
 - [x] User's `ussdcallback` Edge Function request resolved: new Edge Functions are not possible on this stack; the existing `/api/public/ussd/<key>` route already implements the full requested spec (sessionId/serviceCode/phoneNumber/text, CON/END, five topics, invalid-input handling, no Supabase login needed, key stored in Lovable Cloud secrets). Public URL host: `https://project--18d6b6da-9509-4c38-9c05-f437f73b6d80.lovable.app`; the key suffix is on the staff dashboard
 - [x] AI content generator shipped and verified end-to-end in the dashboard (2026-11-02): topic/source → bilingual EN/SW draft → save as draft
