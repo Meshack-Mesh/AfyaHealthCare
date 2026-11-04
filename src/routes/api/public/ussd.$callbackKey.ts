@@ -88,6 +88,8 @@ export const Route = createFileRoute("/api/public/ussd/$callbackKey")({
       POST: async ({ request, params }) => {
         const secret = process.env["USSD_CALLBACK_KEY"];
         if (!secret || !keyMatches(params.callbackKey, secret)) {
+          // Never log the callback key or the requested path (it carries it).
+          console.error("USSD callback rejected: callback key mismatch");
           return new Response("Forbidden", { status: 403 });
         }
 
