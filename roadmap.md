@@ -1,5 +1,11 @@
 # AfyaCare — task roadmap
 
+## Done (2026-11-03)
+- [x] Locked public reads of health_content to published items only (drafts staff-only); RLS migration fix applied live
+- [x] Publish requested — app goes live at https://afyacareussd.lovable.app; USSD callback URL becomes reachable there
+- [x] Confirmed gateway callback and simulator run the same menu engine (`runUssd`), so the live service answers the full AfyaCare menu
+
+
 ## Done
 - Lovable Cloud backend + email/password staff sign-in enabled
 - Database migration applied: roles, users, sessions, bilingual content, providers, reminders, consent + seed data (sample phone numbers — must be replaced with verified facility contacts before launch)
