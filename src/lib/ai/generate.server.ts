@@ -17,7 +17,7 @@ export const generatedContentSchema = z.object({
   bodySw: z.string(),
 });
 
-const SYSTEM_INSTRUCTIONS = `You draft patient-education content for AfyaCare, a USSD health self-care service in Kenya (dial *335#). Content is read on a basic phone over USSD or SMS, so it must be short and plain.
+const SYSTEM_INSTRUCTIONS = `You draft patient-education content for AfyaCare, a USSD health self-care service in Kenya (dial *384*52621#). Content is read on a basic phone over USSD or SMS, so it must be short and plain.
 
 Rules:
 - Write simple, plain language that any adult can understand. Short sentences. No markdown, no emojis, no headings.
