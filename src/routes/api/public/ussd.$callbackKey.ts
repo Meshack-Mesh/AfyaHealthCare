@@ -113,8 +113,8 @@ export const Route = createFileRoute("/api/public/ussd/$callbackKey")({
         if (!parsed.success) {
           // Log a masked phone number only — never the full number or secret.
           const masked =
-            raw.phoneNumber && raw.phoneNumber.length > 6
-              ? `${raw.phoneNumber.slice(0, 6)}***${raw.phoneNumber.slice(-3)}`
+            raw["phoneNumber"] && raw["phoneNumber"].length > 6
+              ? `${raw["phoneNumber"].slice(0, 6)}***${raw["phoneNumber"].slice(-3)}`
               : "***";
           console.error(
             `USSD callback rejected: invalid payload (phone ${masked})`,
