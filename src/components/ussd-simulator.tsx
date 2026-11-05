@@ -10,7 +10,7 @@ import { Loader2, PhoneCall, RotateCcw } from "lucide-react";
  * engine the live callback uses. Read-only: the demo never writes sessions,
  * users or reminders.
  */
-export const USSD_SERVICE_CODE = "*335#";
+export const USSD_SERVICE_CODE = "*384*52621#";
 
 export function UssdSimulator() {
   const simulate = useServerFn(simulateUssd);
@@ -65,7 +65,7 @@ export function UssdSimulator() {
             <p className="ussd-screen animate-pulse text-secondary-foreground">Connecting…</p>
           ) : !dialed ? (
             <p className="ussd-screen text-secondary-foreground">
-              {"AfyaCare Health Service\n\nDial *335# to start."}
+              {`AfyaCare Health Service\n\nDial ${USSD_SERVICE_CODE} to start.`}
             </p>
           ) : (
             <p className="ussd-screen text-secondary-foreground">{screen.text}</p>

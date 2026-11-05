@@ -16,7 +16,7 @@
 
 ## Open
 - [ ] Email sending: no sender domain configured yet — setup dialog shown 2026-11-03; once the user completes it, scaffold the six auth email templates (sign-up confirmation included)
-- [ ] Africa's Talking 401 fix (2026-11-05): the configured callback URL points at the preview host (`id-preview--…lovable.app`), which requires sign-in and returns 401. The published endpoint works (tested 200 with real key). User must edit the callback URL in Africa's Talking to `https://afyacareussd.lovable.app` + the same `/api/public/ussd/<key>` path shown on the staff dashboard. Endpoint also ignores `serviceCode`, so trial code `*384*52621#` works without changes; landing page still shows `*335#` (user's chosen demo code)
+- [ ] Africa's Talking 401 fix (2026-11-05): the configured callback URL points at the preview host (`id-preview--…lovable.app`), which requires sign-in and returns 401. The published endpoint works (tested 200 with real key). User must edit the callback URL in Africa's Talking to `https://afyacareussd.lovable.app` + the same `/api/public/ussd/<key>` path shown on the staff dashboard. Endpoint also ignores `serviceCode`, so trial code `*384*52621#` works without changes.
 - [ ] Replace remaining sample facility phone numbers with verified contacts — user will send them (Nasira Ac Facility, Busia, added 2026-11-02 with +254 768 236 831)
 - [x] User's `ussdcallback` Edge Function request resolved: new Edge Functions are not possible on this stack; the existing `/api/public/ussd/<key>` route already implements the full requested spec (sessionId/serviceCode/phoneNumber/text, CON/END, five topics, invalid-input handling, no Supabase login needed, key stored in Lovable Cloud secrets). Public URL host: `https://project--18d6b6da-9509-4c38-9c05-f437f73b6d80.lovable.app`; the key suffix is on the staff dashboard
 - [x] AI content generator shipped and verified end-to-end in the dashboard (2026-11-02): topic/source → bilingual EN/SW draft → save as draft
@@ -27,6 +27,6 @@
 - [x] Test sign-up/verification data cleaned up (draft deleted, test admin role removed so the first real account claims admin)
 
 ## Done (2026-10-31)
-- [x] Landing page + interactive USSD simulator with dial flow (*335#), design system, root head/fonts/Toaster/auth listener
+- [x] Landing page + interactive USSD simulator with dial flow (*384*52621#), design system, root head/fonts/Toaster/auth listener
 - [x] Server functions moved from src/server/ to src/lib/*.functions.ts (import protection blocked src/server/ in client bundles)
 - [x] Simulator verified in browser: dial, English + Kiswahili menus, facility finder — no console errors
