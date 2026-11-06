@@ -15,6 +15,8 @@
 - `/auth` staff sign-in/sign-up; first account claims admin
 
 ## Open
+- [ ] Staff editor: allow creating, editing, and removing topics, health articles, and facility details without relying on pre-populated seed rows.
+- [ ] Patient reminders: let callers choose bilingual reminder preferences and dates, then deliver scheduled SMS after Africa's Talking credentials and delivery details are configured.
 - [ ] Email sending: no sender domain configured yet — setup dialog shown 2026-11-03; once the user completes it, scaffold the six auth email templates (sign-up confirmation included)
 - [ ] Africa's Talking 401 fix (2026-11-05): the configured callback URL points at the preview host (`id-preview--…lovable.app`), which requires sign-in and returns 401. The published endpoint works (tested 200 with real key). User must edit the callback URL in Africa's Talking to `https://afyacareussd.lovable.app` + the same `/api/public/ussd/<key>` path shown on the staff dashboard. Endpoint also ignores `serviceCode`, so trial code `*384*52621#` works without changes.
 - [ ] Replace remaining sample facility phone numbers with verified contacts — user will send them (Nasira Ac Facility, Busia, added 2026-11-02 with +254 768 236 831)
